@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+.env
+vitalai.db
+static/gsk_*.txt

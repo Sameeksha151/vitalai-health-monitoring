@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>VitalAI Health Assistant</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#1e1b4b,#312e81,#4f46e5);
+color:white;
+min-height:100vh;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:25px 60px;
+}
+
+.logo{
+font-size:26px;
+font-weight:700;
+}
+
+.nav-links{
+display:flex;
+gap:30px;
+align-items:center;
+}
+
+.nav-links a{
+color:white;
+text-decoration:none;
+font-weight:500;
+}
+
+.info-btn{
+cursor:pointer;
+font-size:20px;
+}
+
+/* MAIN LAYOUT */
+
+.main{
+display:flex;
+justify-content:center;
+gap:60px;
+margin-top:60px;
+}
+
+/* CARD */
+
+.card{
+width:480px;
+padding:35px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+border-radius:18px;
+box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* INPUT */
+
+.input-group{
+margin-bottom:15px;
+}
+
+.input-group label{
+display:block;
+margin-bottom:6px;
+font-weight:600;
+}
+
+input,select,textarea{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:none;
+}
+
+/* BUTTON */
+
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:25px;
+background:linear-gradient(90deg,#8b5cf6,#6366f1);
+color:white;
+font-weight:600;
+cursor:pointer;
+}
+
+/* RESULT */
+
+.result{
+margin-top:25px;
+background:white;
+color:#111827;
+padding:20px;
+border-radius:12px;
+}
+
+/* GAUGE */
+
+.gauge{
+width:140px;
+height:140px;
+margin:auto;
+position:relative;
+}
+
+.gauge svg{
+transform:rotate(-90deg);
+}
+
+.gauge circle{
+fill:none;
+stroke-width:12;
+}
+
+.gauge-bg{
+stroke:#e5e7eb;
+}
+
+.gauge-progress{
+stroke:#6366f1;
+stroke-linecap:round;
+stroke-dasharray:377;
+stroke-dashoffset:377;
+transition:1s;
+}
+
+.gauge-value{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:26px;
+font-weight:700;
+}
+
+/* PROGRESS BAR */
+
+.progress{
+height:8px;
+background:#ddd;
+border-radius:10px;
+margin-top:10px;
+overflow:hidden;
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#8b5cf6,#6366f1);
+transition:.6s;
+}
+
+/* STATUS */
+
+.badge{
+padding:6px 14px;
+border-radius:20px;
+font-weight:600;
+display:inline-block;
+margin-top:10px;
+}
+
+.green{
+background:#dcfce7;
+color:#166534;
+}
+
+.yellow{
+background:#fef9c3;
+color:#92400e;
+}
+
+.red{
+background:#fee2e2;
+color:#991b1b;
+}
+
+/* TIPS PANEL */
+
+.tips{
+width:260px;
+background:white;
+color:#111827;
+padding:20px;
+border-radius:15px;
+height:fit-content;
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">
+➕ VitalAI
+</div>
+
+<div class="nav-links">
+
+<a href="/">🏠 Home</a>
+<a href="/dashboard">📊 Dashboard</a>
+<span class="info-btn" onclick="toggleTips()">ℹ️</span>
+
+</div>
+
+</div>
+
+
+<div class="main">
+
+<div class="card">
+
+<h2>Daily Health Check</h2>
+
+<form id="health-form">
+
+ <div class="input-group">
+<label>Email</label>
+<input type="email" name="email" placeholder="Enter your email" required>
+</div>   
+
+<div class="input-group">
+<label>Age</label>
+<input type="number" name="age" required>
+</div>
+
+<div class="input-group">
+<label>Gender</label>
+
+<select name="gender" required>
+<option value="male">Male</option>
+<option value="female">Female</option>
+<option value="other">Other</option>
+</select>
+
+</div>
+
+<div class="input-group">
+<label>Sleep Hours</label>
+<input type="number" name="sleep_hours" required>
+</div>
+
+<div class="input-group">
+<label>Water Intake (liters)</label>
+<input type="number" name="water_liters" required>
+</div>
+
+<div class="input-group">
+<label>Steps</label>
+<input type="number" name="steps" required>
+</div>
+
+<div class="input-group">
+<label>Junk Food Consumption</label>
+
+<select name="junk_food">
+<option value="rare">Rarely</option>
+<option value="sometimes">Sometimes</option>
+<option value="often">Often</option>
+</select>
+
+</div>
+
+<div class="input-group">
+<label>Screen Time</label>
+<input type="number" name="screen_time" required>
+</div>
+
+<div class="input-group">
+<label>Symptoms</label>
+<textarea name="symptoms"></textarea>
+</div>
+
+<button type="submit">
+Analyze My Health
+</button>
+
+</form>
+
+
+<div class="result">
+
+<h3>Your Health Summary</h3>
+
+<div class="gauge">
+
+<svg width="140" height="140">
+
+<circle class="gauge-bg" cx="70" cy="70" r="60"></circle>
+
+<circle id="gaugeProgress" class="gauge-progress" cx="70" cy="70" r="60"></circle>
+
+</svg>
+
+<div id="health-score" class="gauge-value">--</div>
+
+</div>
+
+<div class="progress">
+<div id="score-progress" class="progress-bar"></div>
+</div>
+
+<p id="summary-text"></p>
+
+<p id="doctor-advice" style="font-weight:600;color:#4f46e5;"></p>
+
+<div id="health-status" class="badge"></div>
+
+<h4>Recommendations</h4>
+<ul id="recommendations-list"></ul>
+
+<h4>Health Tips</h4>
+<ul id="tips-list"></ul>
+
+</div>
+
+</div>
+
+
+<div class="tips" id="tipsBox">
+
+<h3>Healthy Tips</h3>
+
+<ul>
+<li>Sleep 7–8 hours daily</li>
+<li>Drink 2–3 liters water</li>
+<li>Walk 6000+ steps</li>
+<li>Limit junk food</li>
+<li>Reduce screen time</li>
+</ul>
+
+</div>
+
+</div>
+
+
+<script>
+
+function toggleTips(){
+
+const tips = document.getElementById("tipsBox")
+
+if(tips.style.display==="block"){
+tips.style.display="none"
+}else{
+tips.style.display="block"
+}
+
+}
+
+const form=document.getElementById("health-form")
+
+const score=document.getElementById("health-score")
+const summary=document.getElementById("summary-text")
+const rec=document.getElementById("recommendations-list")
+const tips=document.getElementById("tips-list")
+const badge=document.getElementById("health-status")
+const progress=document.getElementById("score-progress")
+const gauge=document.getElementById("gaugeProgress")
+
+form.addEventListener("submit",async(e)=>{
+
+e.preventDefault()
+
+const data=new FormData(form)
+
+const payload={}
+
+data.forEach((v,k)=>payload[k]=v)
+
+const res=await fetch("/analyze",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(payload)
+})
+
+const result=await res.json()
+
+score.textContent=result.health_score
+
+progress.style.width=result.health_score+"%"
+
+/* GAUGE ANIMATION */
+
+const circumference = 2 * Math.PI * 60
+const offset = circumference - (result.health_score/100)*circumference
+
+gauge.style.strokeDashoffset = offset
+gauge.style.strokeDasharray = circumference
+
+/* STATUS */
+
+if(result.health_score>=80){
+badge.textContent="🟢 Healthy"
+badge.className="badge green"
+}
+
+else if(result.health_score>=60){
+badge.textContent="🟡 Moderate"
+badge.className="badge yellow"
+}
+
+else{
+badge.textContent="🔴 Risk"
+badge.className="badge red"
+}
+
+summary.textContent = result.summary
+
+document.getElementById("doctor-advice").textContent = result.doctor_advice
+
+
+rec.innerHTML=""
+
+result.recommendations.forEach(r=>{
+const li=document.createElement("li")
+li.textContent=r
+rec.appendChild(li)
+})
+
+tips.innerHTML=""
+
+result.tips.forEach(t=>{
+const li=document.createElement("li")
+li.textContent=t
+tips.appendChild(li)
+})
+
+})
+
+</script>
+
+</body>
+</html>
