@@ -45,7 +45,7 @@ The system also sends the health report directly to the user's email.
 ## Installation
 
 1. Clone the repository
-git clone https://github.com/Sameeksha151/vitalai-health-monitoring.gitture
+gh repo clone Sameeksha151/vitalai-health-monitoring
 
 2. Navigate to project folder
 
